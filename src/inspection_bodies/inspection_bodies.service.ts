@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateInspectionBodyDto } from './dto/create-inspection_body.dto';
 import { UpdateInspectionBodyDto } from './dto/update-inspection_body.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { InspectionBody } from './entities/inspection_body.entity';
 
 @Injectable()
 export class InspectionBodiesService {
-  create(createInspectionBodyDto: CreateInspectionBodyDto) {
-    return 'This action adds a new inspectionBody';
+  constructor(
+    @InjectRepository(InspectionBody)
+    private readonly inspectionBodyRepository: Repository<InspectionBody>,
+  ) {}
+
+  async create(createInspectionBodyDto: CreateInspectionBodyDto) {
+    const inspectionBody = this.inspectionBodyRepository.create(
+      createInspectionBodyDto,
+    );
+    return this.inspectionBodyRepository.save(inspectionBody);
   }
 
-  findAll() {
-    return `This action returns all inspectionBodies`;
+  async findAll() {
+    return this.inspectionBodyRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} inspectionBody`;
+  async findOne(id: number) {
+    return this.inspectionBodyRepository.findOneBy({ id });
   }
 
-  update(id: number, updateInspectionBodyDto: UpdateInspectionBodyDto) {
-    return `This action updates a #${id} inspectionBody`;
+  async update(id: number, updateInspectionBodyDto: UpdateInspectionBodyDto) {
+    const inspectionBodyUpdated = await this.inspectionBodyRepository.update(
+      id,
+      updateInspectionBodyDto,
+    );
+    return { message: `Inspection body with id ${id} updated successfully!` };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} inspectionBody`;
+  async remove(id: number) {
+    const deletedInspectionBody =
+      await this.inspectionBodyRepository.delete(id);
+    return { message: `Inspection body with id ${id} deleted successfully!` };
   }
 }

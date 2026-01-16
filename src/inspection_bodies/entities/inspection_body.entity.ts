@@ -3,10 +3,12 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  Entity,
 } from 'typeorm';
 import { Inspectorate } from '../enums/inspectorate.enum';
 import { Jurisdiction } from '../enums/jurisdiction.enum';
 
+@Entity()
 export class InspectionBody {
   @PrimaryGeneratedColumn()
   id: number;
