@@ -1,9 +1,11 @@
+import { Inspection } from 'src/inspections/entities/inspection.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 
 @Entity()
@@ -31,4 +33,7 @@ export class Product {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Inspection, (inspection) => inspection.product)
+  inspections: Inspection[];
 }

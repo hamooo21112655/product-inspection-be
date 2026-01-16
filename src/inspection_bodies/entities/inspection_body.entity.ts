@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   Entity,
+  OneToMany,
 } from 'typeorm';
 import { Inspectorate } from '../enums/inspectorate.enum';
 import { Jurisdiction } from '../enums/jurisdiction.enum';
+import { Inspection } from 'src/inspections/entities/inspection.entity';
 
 @Entity()
 export class InspectionBody {
@@ -36,4 +38,7 @@ export class InspectionBody {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Inspection, (inspection) => inspection.inspectionBody)
+  inspections: Inspection[];
 }
