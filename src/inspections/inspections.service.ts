@@ -44,10 +44,6 @@ export class InspectionsService {
     return this.inspectionRepository.save(inspectionBody);
   }
 
-  async findAll() {
-    return this.inspectionRepository.find();
-  }
-
   async findOne(id: number) {
     const inspection = await this.inspectionRepository.findOneBy({ id });
 
@@ -89,5 +85,42 @@ export class InspectionsService {
     }
 
     return { message: `Inspection with id ${id} deleted successfully!` };
+  }
+
+  async findAllByBodyAndPeriod(
+    inspectionBodyId: number,
+    from?: string,
+    to?: string,
+    page = 1,
+    limit = 10,
+  ) {
+    const query = this.inspectionRepository.createQueryBuilder('inspection');
+
+    query.where('inspection.inspectionBodyId = :bodyId', {
+      bodyId: inspectionBodyId,
+    });
+
+    if (from) {
+      query.andWhere('inspection.inspectionDate >= :from', { from });
+    }
+
+    if (to) {
+      query.andWhere('inspection.inspectionDate <= :to', { to });
+    }
+
+    query.orderBy('inspection.inspectionDate', 'DESC');
+
+    query.skip((page - 1) * limit);
+    query.take(limit);
+
+    const [data, total] = await query.getManyAndCount();
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

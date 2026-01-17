@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { InspectionsService } from './inspections.service';
 import { CreateInspectionDto } from './dto/create-inspection.dto';
 import { UpdateInspectionDto } from './dto/update-inspection.dto';
+import { GetInspectionsQueryDto } from './dto/get-inspections-query-dto.dto';
 
 @Controller('inspections')
 export class InspectionsController {
@@ -22,8 +24,14 @@ export class InspectionsController {
   }
 
   @Get()
-  findAll() {
-    return this.inspectionsService.findAll();
+  findAll(@Query() query: GetInspectionsQueryDto) {
+    return this.inspectionsService.findAllByBodyAndPeriod(
+      query.inspectionBodyId,
+      query.from,
+      query.to,
+      query.page,
+      query.limit,
+    );
   }
 
   @Get(':id')
