@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInspectionBodyDto } from './dto/create-inspection_body.dto';
 import { UpdateInspectionBodyDto } from './dto/update-inspection_body.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,7 +24,15 @@ export class InspectionBodiesService {
   }
 
   async findOne(id: number) {
-    return this.inspectionBodyRepository.findOneBy({ id });
+    const inspectionBody = await this.inspectionBodyRepository.findOneBy({
+      id,
+    });
+
+    if (!inspectionBody) {
+      throw new NotFoundException(`Inspection body with id ${id} not found!`);
+    }
+
+    return inspectionBody;
   }
 
   async update(id: number, updateInspectionBodyDto: UpdateInspectionBodyDto) {
@@ -32,12 +40,22 @@ export class InspectionBodiesService {
       id,
       updateInspectionBodyDto,
     );
+
+    if (inspectionBodyUpdated.affected === 0) {
+      throw new NotFoundException(`Inspection body with id ${id} not found!`);
+    }
+
     return { message: `Inspection body with id ${id} updated successfully!` };
   }
 
   async remove(id: number) {
     const deletedInspectionBody =
       await this.inspectionBodyRepository.delete(id);
+
+    if (!deletedInspectionBody) {
+      throw new NotFoundException(`Inspection body with id ${id} not found!`);
+    }
+
     return { message: `Inspection body with id ${id} deleted successfully!` };
   }
 }

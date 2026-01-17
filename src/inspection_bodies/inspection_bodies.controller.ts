@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { InspectionBodiesService } from './inspection_bodies.service';
 import { CreateInspectionBodyDto } from './dto/create-inspection_body.dto';
@@ -28,20 +29,20 @@ export class InspectionBodiesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.inspectionBodiesService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() updateInspectionBodyDto: UpdateInspectionBodyDto,
   ) {
     return this.inspectionBodiesService.update(id, updateInspectionBodyDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: number) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     return this.inspectionBodiesService.remove(id);
   }
 }
