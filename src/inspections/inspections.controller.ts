@@ -24,7 +24,7 @@ export class InspectionsController {
   }
 
   @Get()
-  findAll(@Query() query: GetInspectionsQueryDto) {
+  findAllByBodyAndPeriod(@Query() query: GetInspectionsQueryDto) {
     return this.inspectionsService.findAllByBodyAndPeriod(
       query.inspectionBodyId,
       query.from,
@@ -32,6 +32,11 @@ export class InspectionsController {
       query.page,
       query.limit,
     );
+  }
+
+  @Get('/all')
+  findAll() {
+    return this.inspectionsService.findAll();
   }
 
   @Get(':id')

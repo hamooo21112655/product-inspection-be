@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInspectionDto } from './dto/create-inspection.dto';
 import { UpdateInspectionDto } from './dto/update-inspection.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -85,6 +81,10 @@ export class InspectionsService {
     }
 
     return { message: `Inspection with id ${id} deleted successfully!` };
+  }
+
+  async findAll() {
+    return this.inspectionRepository.find();
   }
 
   async findAllByBodyAndPeriod(
